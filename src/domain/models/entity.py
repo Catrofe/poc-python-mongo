@@ -1,6 +1,10 @@
+import datetime
+import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+
+from src.domain.enums import SituacaoEnum
 
 
 class Situacao(BaseModel):
@@ -39,10 +43,10 @@ class Proponente(BaseModel):
 
 
 class Cotacao(BaseModel):
-    localizadorCotacao: str
-    nrVersao: str
-    dtCotacao: str
-    lsObjetoSegurado: Optional[list[dict[str, str]]]
-    lsProponente: Optional[list[Proponente]]
-    lsBeneficiario: Optional[list[Beneficiario]]
-    situacao: Situacao
+    localizadorCotacao: str = str(uuid.uuid4())
+    nrVersao: int = 1
+    dtCotacao: str = str(datetime.datetime.now())
+    lsObjetoSegurado: Optional[list[dict[str, str]]] = None
+    lsProponente: Optional[list[Proponente]] = None
+    lsBeneficiario: Optional[list[Beneficiario]] = None
+    situacao: Situacao = Situacao(**SituacaoEnum.EM_ANDAMENTO.value)  # type: ignore

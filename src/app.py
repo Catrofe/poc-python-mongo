@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
+from src.controller.cotacao_router import router
 
 app = FastAPI()
 
@@ -26,3 +27,6 @@ async def redirect_to_docs() -> RedirectResponse:
 @app.get("/health", status_code=204)
 async def health() -> None:
     logging.info("Health check")
+
+
+app.include_router(router, prefix=BASE_PATH, tags=["Cotacao"])

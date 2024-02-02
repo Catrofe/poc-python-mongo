@@ -1,16 +1,23 @@
-from abc import ABC, abstractmethod
 from typing import Any
 
 from src.domain.enums import Repository
-from src.infra.repository.RepositoryManager import RepositoryManager
+from src.infra.repository.repository_base import RepositoryBase
 
 
-class IRepository(ABC):
+class RepositoryManagerMeta(type):
+    _instance = None
+
+    def __call__(cls, *args, **kwargs) -> Any:  # type: ignore
+        if cls._instance is None:
+            cls._instance = super().__call__(*args, **kwargs)
+        return cls._instance
+
+
+class RepositoryManager(metaclass=RepositoryManagerMeta):
 
     def __init__(self) -> None:
-        self.__repository = RepositoryManager()
+        self.__repository = RepositoryBase()
 
-    @abstractmethod
     async def registrar_novo_documento(
         self,
         documento: dict[str, Any],
@@ -35,7 +42,6 @@ class IRepository(ABC):
                 {"_id": {"$in": row.inserted_ids}}
             )
 
-    @abstractmethod
     async def atualizar_documento(
         self, documento: dict[str, Any], collection: Repository
     ) -> Any:
@@ -43,19 +49,16 @@ class IRepository(ABC):
             {"_id": documento["_id"]}, {"$set": documento}
         )
 
-    @abstractmethod
     async def buscar_um_documento(
         self, query: dict[str, Any], collection: Repository
     ) -> Any:
         return await self.__repository.get_connection(collection).find_one(query)
 
-    @abstractmethod
     async def buscar_muitos_documentos(
         self, query: dict[str, Any], collection: Repository
     ) -> Any:
         return await self.__repository.get_connection(collection).find(query)
 
-    @abstractmethod
     async def deletar_documento(
         self, documento: dict[str, Any], collection: Repository
     ) -> Any:
