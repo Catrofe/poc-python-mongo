@@ -1,7 +1,7 @@
 import enum
 
 
-class Repository(enum.Enum):
+class RepositoryEnum(enum.Enum):
     OBJETO_SEGURADO = "objeto_segurado"
     COTACAO = "cotacao"
     PROPONENTE = "proponente"

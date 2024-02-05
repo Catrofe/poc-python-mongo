@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from pymongo.collection import ReturnDocument
 
-from src.domain.enums import Repository
+from src.domain.enums import RepositoryEnum
 from src.infra.repository.repository_base import RepositoryBase
 
 
@@ -23,7 +23,7 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
     async def registrar_novo_documento(
         self,
         documento: dict[str, Any],
-        collection: Repository,
+        collection: RepositoryEnum,
         return_object: bool = False,
     ) -> Any:
         row = await self.__repository.get_connection(collection).insert_one(documento)
@@ -35,7 +35,7 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
     async def registrar_novos_documentos(
         self,
         documentos: list[dict[str, Any]],
-        collection: Repository,
+        collection: RepositoryEnum,
         return_object: bool = False,
     ) -> Any:
         row = await self.__repository.get_connection(collection).insert_many(documentos)
@@ -47,7 +47,7 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
     async def atualizar_documento(
         self,
         documento: dict[str, Any],
-        collection: Repository,
+        collection: RepositoryEnum,
         doc_atualizado: bool = True,
         query: Optional[dict[str, Any]] = None,
     ) -> Any:
@@ -65,24 +65,24 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
     async def buscar_um_documento(
         self,
         query: dict[str, Any] | list[dict[str, dict[str, str]]],
-        collection: Repository,
+        collection: RepositoryEnum,
     ) -> Any:
         return await self.__repository.get_connection(collection).find_one(query)
 
     async def buscar_muitos_documentos(
-        self, query: dict[str, Any], collection: Repository
+        self, query: dict[str, Any], collection: RepositoryEnum
     ) -> Any:
         return (
             await self.__repository.get_connection(collection).find(query).to_list(1000)
         )
 
     async def deletar_documento(
-        self, documento: dict[str, Any], collection: Repository
+        self, documento: dict[str, Any], collection: RepositoryEnum
     ) -> Any:
         return await self.__repository.get_connection(collection).delete_one(documento)
 
     async def buscar_com_agregacao(
-        self, query: list[dict[str, Any]], collection: Repository, limit: int = 1
+        self, query: list[dict[str, Any]], collection: RepositoryEnum, limit: int = 1
     ) -> Any:
         conexao = await self.__repository.get_async_collection(collection)
         return await conexao.aggregate(query).to_list(limit)

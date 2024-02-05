@@ -1,13 +1,13 @@
 from fastapi import HTTPException
 
-from src.domain.enums import Repository
+from src.domain.enums import RepositoryEnum
 from src.domain.models.entity import Proponente
 from src.domain.repository.repository_manager import RepositoryManager
 
 
 class ProponenteService:
 
-    def __init__(self, collection: Repository = Repository.PROPONENTE) -> None:
+    def __init__(self, collection: RepositoryEnum = RepositoryEnum.PROPONENTE) -> None:
         self.collection = collection
         self._repository = RepositoryManager()
 

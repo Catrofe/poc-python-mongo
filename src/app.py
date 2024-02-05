@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
+from src.controller.beneficiario_router import router as beneficiario_router
 from src.controller.cotacao_router import router as cotacao_router
 from src.controller.proponente_router import router as proponente_router
 
@@ -32,3 +33,4 @@ async def health() -> None:
 
 app.include_router(cotacao_router, prefix=BASE_PATH, tags=["Cotacao"])
 app.include_router(proponente_router, prefix=BASE_PATH, tags=["Proponente"])
+app.include_router(beneficiario_router, prefix=BASE_PATH, tags=["Beneficiario"])

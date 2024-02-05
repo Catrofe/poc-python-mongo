@@ -1,4 +1,4 @@
-from src.domain.enums import Repository
+from src.domain.enums import RepositoryEnum
 from src.domain.models.entity import Cotacao
 from src.domain.repository.repository_manager import RepositoryManager
 from src.service.provider.query_generator import QueryGenerator
@@ -6,7 +6,7 @@ from src.service.provider.query_generator import QueryGenerator
 
 class CotacaoService:
 
-    def __init__(self, collection: Repository = Repository.COTACAO) -> None:
+    def __init__(self, collection: RepositoryEnum = RepositoryEnum.COTACAO) -> None:
         self.collection = collection
         self._repository = RepositoryManager()
 
