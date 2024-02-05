@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from src.domain.enums import SituacaoEnum
 
@@ -33,7 +33,7 @@ class Beneficiario(BaseModel):
 
 
 class Proponente(BaseModel):
-    localizadorCotacao: str
+    localizadorCotacao: str = Field(exclude=True)
     email: str
     endereco: Endereco
     telefone: str

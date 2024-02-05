@@ -50,16 +50,26 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
         )
 
     async def buscar_um_documento(
-        self, query: dict[str, Any], collection: Repository
+        self,
+        query: dict[str, Any] | list[dict[str, dict[str, str]]],
+        collection: Repository,
     ) -> Any:
         return await self.__repository.get_connection(collection).find_one(query)
 
     async def buscar_muitos_documentos(
         self, query: dict[str, Any], collection: Repository
     ) -> Any:
-        return await self.__repository.get_connection(collection).find(query)
+        return (
+            await self.__repository.get_connection(collection).find(query).to_list(1000)
+        )
 
     async def deletar_documento(
         self, documento: dict[str, Any], collection: Repository
     ) -> Any:
         return await self.__repository.get_connection(collection).delete_one(documento)
+
+    async def buscar_com_agregacao(
+        self, query: list[dict[str, Any]], collection: Repository, limit: int = 1
+    ) -> Any:
+        conexao = await self.__repository.get_async_collection(collection)
+        return await conexao.aggregate(query).to_list(limit)

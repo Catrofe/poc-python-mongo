@@ -1,13 +1,11 @@
 from fastapi import APIRouter
 
-from src.domain.models.entity import Cotacao, Proponente
+from src.domain.models.entity import Cotacao
 from src.service.cotacao_service import CotacaoService
-from src.service.proponente_service import ProponenteService
 
 router = APIRouter()
 
-cotacao_service = CotacaoService()
-proponente_service = ProponenteService()
+service = CotacaoService()
 
 
 @router.post("/emissao/cotacao", status_code=201, response_model=Cotacao)
@@ -15,12 +13,14 @@ async def iniciar_cotacao() -> Cotacao:
     """
     Endpoint responsável por iniciar uma nova cotação.
     """
-    return await cotacao_service.iniciar_cotacao()
+    return await service.iniciar_cotacao()
 
 
-@router.post("/emissao/proponente", status_code=201, response_model=Proponente)
-async def registrar_proponente(proponente: Proponente) -> Proponente:
+@router.get(
+    "/emissao/cotacao/{localizadorCotacao}", status_code=200, response_model=Cotacao
+)
+async def buscar_cotacao(localizadorCotacao: str) -> Cotacao:
     """
-    Endpoint responsável por registrar um novo proponente.
+    Endpoint responsável por buscar uma cotação pelo id.
     """
-    return await proponente_service.registrar_proponente(proponente)
+    return await service.buscar_cotacao_completa(localizadorCotacao)

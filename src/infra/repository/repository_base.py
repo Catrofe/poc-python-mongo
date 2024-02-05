@@ -15,3 +15,8 @@ class RepositoryBase:
 
     def get_connection(self, repository: Repository) -> Any:
         return self._db_connection.get_collection(repository.value)
+
+    async def get_async_collection(self, repository: Repository) -> Any:
+        return motor.motor_asyncio.AsyncIOMotorCollection(
+            self._db_connection, repository.value
+        )
