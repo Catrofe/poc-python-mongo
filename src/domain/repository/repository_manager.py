@@ -1,4 +1,6 @@
-from typing import Any
+from typing import Any, Optional
+
+from pymongo.collection import ReturnDocument
 
 from src.domain.enums import Repository
 from src.infra.repository.repository_base import RepositoryBase
@@ -43,10 +45,21 @@ class RepositoryManager(metaclass=RepositoryManagerMeta):
             )
 
     async def atualizar_documento(
-        self, documento: dict[str, Any], collection: Repository
+        self,
+        documento: dict[str, Any],
+        collection: Repository,
+        doc_atualizado: bool = True,
+        query: Optional[dict[str, Any]] = None,
     ) -> Any:
+        doc_return = ReturnDocument.AFTER if doc_atualizado else ReturnDocument.BEFORE
+        if query:
+            return await self.__repository.get_connection(
+                collection
+            ).find_one_and_update(
+                query, {"$set": documento}, return_document=doc_return
+            )
         return await self.__repository.get_connection(collection).find_one_and_update(
-            {"_id": documento["_id"]}, {"$set": documento}
+            {"_id": documento["_id"]}, {"$set": documento}, return_document=doc_return
         )
 
     async def buscar_um_documento(
